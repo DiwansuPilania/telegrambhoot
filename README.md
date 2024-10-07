@@ -1,161 +1,88 @@
 # telegrambhoot
 
-import telebot
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+House Representative Bot
+This is a Telegram bot that allows users to select a house and role (Faculty or Student), and then retrieves and displays contact information along with relevant images for selected House Captains, Vice-Captains, or other roles.
 
+Features
+House Selection: Users can select from four houses:
+🔵 Samrat Ashoka
+🟤 Raja Krishnadevaraya
+🟢 Maharana Pratap
+🟠 Chhatrapati Shivaji Maharaj
+Representative Type Selection: Users choose whether they are Faculty or Student.
+Role Selection: Depending on the representative type, users select from roles such as:
+Faculty In-charge
+Faculty Representative
+House BE Mentor
+House Captain
+House Vice-Captain
+Contact Information: The bot provides contact information for the selected role.
+Image Display: For certain roles like House Captain, the bot also displays an image along with the contact details.
+Requirements
+Python 3.7+
+Dependencies: Install the required dependencies using pip:
+bash
+Copy code
+pip install pyTelegramBotAPI
+Setup
+Clone the repository:
 
-# Replace 'YOUR_BOT_API_TOKEN' with the actual API token from BotFather
-bot = telebot.TeleBot('7511809136:AAEBxjVygvDhgqe7Iq6vRWlIXkwv-tzBLtg')
+bash
+Copy code
+git clone https://github.com/yourusername/house-representative-bot.git
+Install dependencies: Install the telebot library using pip:
 
-# Dictionary to store user data
-user_data = {}
+bash
+Copy code
+pip install pyTelegramBotAPI
+Get the API Token:
 
-# Function to create house selection buttons with colors represented by emojis
-def create_house_buttons():
-    markup = ReplyKeyboardMarkup(row_width=2)
-    houses = [
-        "🔵 Samrat Ashoka",          # Blue
-        "🟤 Raja Krishnadevaraya",   # Maroon
-        "🟢 Maharana Pratap",        # Green
-        "🟠 Chhatrapati Shivaji Maharaj"  # Orange
-    ]
-    for house in houses:
-        markup.add(KeyboardButton(house))
-    return markup
+Create a new bot via BotFather on Telegram.
+Copy the generated API token and update the bot's configuration in the code.
+Add your API token: In the main.py file, replace 'YOUR_BOT_API_TOKEN' with your actual token from BotFather:
 
-# Function to create representative type buttons with emojis
-def create_rep_type_buttons():
-    markup = ReplyKeyboardMarkup(row_width=2)
-    rep_types = ["👨‍🏫 Faculties", "👨‍🎓 Students"]
-    for rep_type in rep_types:
-        markup.add(KeyboardButton(rep_type))
-    return markup
+python
+Copy code
+bot = telebot.TeleBot('YOUR_BOT_API_TOKEN')
+Prepare Images: Ensure the images for the House Captains, Vice-Captains, or Faculty are in the project directory and correctly named (e.g., csm.jpg, ashokavc.jpg, etc.).
 
-# Function to create faculty role buttons with emojis
-def create_faculty_role_buttons():
-    markup = ReplyKeyboardMarkup(row_width=2)
-    roles = ["👔 Faculty In-charge", "👥 Faculty Representative"]
-    for role in roles:
-        markup.add(KeyboardButton(role))
-    return markup
+Run the bot: Start the bot by running the following command:
 
-# Function to create student role buttons with emojis
-def create_student_role_buttons():
-    markup = ReplyKeyboardMarkup(row_width=2)
-    roles = ["💼 House BE Mentor", "🏅 House Captain", "🎖 House Vice-Captain"]
-    for role in roles:
-        markup.add(KeyboardButton(role))
-    return markup
+bash
+Copy code
+python main.py
+How to Use
+Start the bot: Open the bot in Telegram and type /start to begin interacting.
+Select a House: Choose from one of the four houses.
+Select Representative Type: Choose between Faculties or Students.
+Select a Role: Depending on the previous selection, choose a role such as House Captain or Faculty In-charge.
+Receive Contact Information: The bot will display the contact information for the selected house and role. If available, it will also send an image.
+Folder Structure
+bash
+Copy code
+house-representative-bot/
+│
+├── main.py                # The main bot script
+├── csm.jpg                # Image for Chhatrapati Shivaji Maharaj Captain
+├── ashokavc.jpg           # Image for Samrat Ashoka Vice-Captain
+├── raja.jpg               # Image for Raja Krishnadevaraya Captain
+├── README.md              # This README file
+└── ...                    # Other necessary images
+Example Interaction
+makefile
+Copy code
+User: /start
+Bot: 𝐀𝐚 𝐆𝐚𝐲𝐚 𝐒𝐡𝐞𝐫,𝐍𝐚𝐚𝐦 𝐏𝐮𝐜𝐡𝐧𝐞😂
+[House buttons appear]
 
-# Function to create a restart button with emoji
-def create_restart_button():
-    markup = ReplyKeyboardMarkup(row_width=1)
-    markup.add(KeyboardButton("🔄 Restart"))
-    return markup
+User selects "🔵 Samrat Ashoka"
+Bot: 𝐀𝐛 𝐈𝐬𝐦𝐞 𝐊𝐢𝐬𝐤𝐚 𝐍𝐚𝐚𝐦 𝐁𝐡𝐮𝐥 𝐆𝐚𝐲𝐚
+[Representative type buttons appear]
 
-# Start command handler
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "𝐀𝐚 𝐆𝐚𝐲𝐚 𝐒𝐡𝐞𝐫,𝐍𝐚𝐚𝐦 𝐏𝐮𝐜𝐡𝐧𝐞😂", reply_markup=create_house_buttons())
-    # Initialize user data for this chat
-    user_data[message.chat.id] = {'step': 'house_selection'}
+User selects "👨‍🎓 Students"
+Bot: 𝐈𝐬𝐦𝐞 𝐊𝐨𝐧 𝐡
+[Role buttons appear]
 
-# House selection handler
-@bot.message_handler(func=lambda message: user_data.get(message.chat.id, {}).get('step') == 'house_selection')
-def house_selection(message):
-    houses = [
-        "🔵 Samrat Ashoka",         
-        "🟤 Raja Krishnadevaraya",  
-        "🟢 Maharana Pratap",       
-        "🟠 Chhatrapati Shivaji Maharaj"
-    ]
-    if message.text in houses:
-        user_data[message.chat.id]['house'] = message.text
-        bot.reply_to(message, "𝐀𝐛 𝐈𝐬𝐦𝐞 𝐊𝐢𝐬𝐤𝐚 𝐍𝐚𝐚𝐦 𝐁𝐡𝐮𝐥 𝐆𝐚𝐲𝐚 ", reply_markup=create_rep_type_buttons())
-        user_data[message.chat.id]['step'] = 'representative_type'
-    else:
-        bot.reply_to(message, "𝐓𝐞𝐣 𝐍𝐚 𝐁𝐚𝐧𝐧𝐞")
-
-# Representative type selection handler
-@bot.message_handler(func=lambda message: user_data.get(message.chat.id, {}).get('step') == 'representative_type')
-def representative_type_selection(message):
-    if message.text == "👨‍🏫 Faculties":
-        user_data[message.chat.id]['rep_type'] = message.text
-        bot.reply_to(message, "𝐈𝐬𝐦𝐞 𝐊𝐨𝐧 𝐡", reply_markup=create_faculty_role_buttons())
-        user_data[message.chat.id]['step'] = 'representative_role'
-    elif message.text == "👨‍🎓 Students":
-        user_data[message.chat.id]['rep_type'] = message.text
-        bot.reply_to(message , "𝐈𝐬𝐦𝐞 𝐊𝐨𝐧 𝐡", reply_markup=create_student_role_buttons())
-        user_data[message.chat.id]['step'] = 'representative_role'
-    else:
-        bot.reply_to(message, "𝐓𝐞𝐣 𝐍𝐚 𝐁𝐚𝐧𝐧𝐞")
-
-# Function to retrieve contact information and associated photo
-def get_contact_details_and_photo(house, rep_type, role):
-    contact_data = {
-        "🔵 Samrat Ashoka": {
-            "👔 Faculty In-charge": ("Prof JB Jawale- 7457924466",),
-            "👥 Faculty Representative": ("Dr. Dipika Birari, Mr. Anup Kadam, Ms. Gouri Bhasale, Pravin Sangle",),
-            "💼 House BE Mentor": ("Ayush Ojha- 6264389700, Akriti Singh- 7457924466",),
-            "🏅 House Captain": ("Ankit Yadav(ENTC)- 7494924041, Tanisha Sharma(ENTC)- 9419604895", "csmcap.jpg"),
-            "🎖 House Vice-Captain": ("Akash Singh- 9571265207, Sunandha Reddy(IT)- 9571067672", "ashokavc.jpg")
-        },
-        "🟤 Raja Krishnadevaraya": {
-            "👔 Faculty In-charge": ("Dr. Pritee Purohit- 9351447398",),
-            "👥 Faculty Representative": ("Mr. Sukumar Chaughule, Mr. Yuvraj Gholap", ),
-            "💼 House BE Mentor": ("Shivram- 9351447398, Ritika- 8983829429",),
-            "🏅 House Captain": ("Rohit Kumar(ENTC)- 9462007939, Shaikh Haseena- 8459258517", "raja.jpg"),
-            "🎖 House Vice-Captain": ("Piyush Saini- 9599478220, Kritika- 6267007012", "rkdvc.jpg")
-        },
-        "🟢 Maharana Pratap": {
-            "👔 Faculty In-charge": ("Dr. Ashwini Sapkal- 7518470604",),
-            "👥 Faculty Representative": ("Mr. Girish Kapse, Ms. Sushma Shirke, Mr. Anand", ),
-            "💼 House BE Mentor": ("Pranay Puniya- 7851847604, Aditi More- 9501501733",),
-            "🏅 House Captain": ("Krishan Kumar- 8941989000, Ashritha Reddy- 7386705828", "krishnacp.jpg"),
-            "🎖 House Vice-Captain": ("Shivam Sharma- 8354099643, Ritika Kumari- 882469 3065", "maharana.jpg")
-        },
-        "🟠 Chhatrapati Shivaji Maharaj": {
-            "👔 Faculty In-charge": ("Prof MB Lonare- 9971018972", "fac.jpg"),
-            "👥 Faculty Representative": ("Mr. Vijay karra, Mr. Sandeep Sampleti , Dr. SM Gaikwad, Prakash K"),
-            "💼 House BE Mentor": ("Piyush - 7905061506, Anushna Panwar- 9971081972",),
-            "🏅 House Captain": ("Pratham Kumar- 703771998,Khushia-7850005774", "csm.jpg"),
-            "🎖 House Vice-Captain": ("Shivang Kumar- 6395926392,Khushboo- 9341692964", "csmvc.jpg")
-        }
-    }
-
-    if rep_type == "👨‍🏫 Faculties":
-        return contact_data.get(house, {}).get(role, ("No contact information available.", None))
-    elif rep_type == "👨‍🎓 Students":
-        return contact_data.get(house, {}).get(role, ("No contact information available.", None))
-
-# Representative role selection handler
-@bot.message_handler(func=lambda message: user_data.get(message.chat.id, {}).get('step') == 'representative_role')
-def representative_role_selection(message):
-    if message.text in ["👔 Faculty In-charge", "👥 Faculty Representative", "💼 House BE Mentor", "🏅 House Captain", "🎖 House Vice-Captain"]:
-        user_data[message.chat.id]['role'] = message.text
-        contact_info, photo_path = get_contact_details_and_photo(user_data[message.chat.id]['house'], user_data[message.chat.id]['rep_type'], user_data[message.chat.id]['role'])
-
-        # Send the contact info
-        bot.reply_to(message, contact_info)
-
-        # Send the photo if available
-        if photo_path:
-            with open(photo_path, 'rb') as photo:
-                bot.send_photo(message.chat.id, photo)
-
-        bot.reply_to(message, "Choose an option to continue:", reply_markup=create_restart_button())
-        user_data[message.chat.id]['step'] = 'restart'
-    else:
-        bot.reply_to(message, "𝐓𝐞𝐣 𝐍𝐚 𝐁𝐚𝐧𝐧𝐞")
-
-# Restart handler
-@bot.message_handler(func=lambda message: user_data.get(message.chat.id, {}).get('step') == 'restart')
-def restart(message):
-    if message.text == "🔄 Restart":
-        user_data[message.chat.id] = {'step': 'house_selection'}
-        bot.reply_to(message, "𝐀𝐚 𝐆𝐚𝐲𝐚 𝐒𝐡𝐞𝐫, 𝐀𝐚𝐣 𝐊𝐢𝐬𝐤𝐚 𝐍𝐚𝐚𝐦 𝐁𝐡𝐮𝐥 𝐆𝐚𝐲𝐚", reply_markup=create_house_buttons())
-    else:
-        bot.reply_to(message, "𝐓𝐞𝐣 𝐍𝐚 𝐁𝐚𝐧𝐧𝐞")
-
-# Start the bot
-bot.polling()
+User selects "🏅 House Captain"
+Bot: Ankit Yadav(ENTC)- 7494924041, Tanisha Sharma(ENTC)- 9419604895
+[Image of House Captain appears]
