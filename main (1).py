@@ -1,14 +1,14 @@
-import telebot
+    import telebot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 
-# Replace 'YOUR_BOT_API_TOKEN' with the actual API token from BotFather
+
 bot = telebot.TeleBot('7511809136:AAEBxjVygvDhgqe7Iq6vRWlIXkwv-tzBLtg')
 
-# Dictionary to store user data
+
 user_data = {}
 
-# Function to create house selection buttons with colors represented by emojis
+
 def create_house_buttons():
     markup = ReplyKeyboardMarkup(row_width=2)
     houses = [
@@ -21,7 +21,7 @@ def create_house_buttons():
         markup.add(KeyboardButton(house))
     return markup
 
-# Function to create representative type buttons with emojis
+
 def create_rep_type_buttons():
     markup = ReplyKeyboardMarkup(row_width=2)
     rep_types = ["👨‍🏫 Faculties", "👨‍🎓 Students"]
@@ -29,7 +29,7 @@ def create_rep_type_buttons():
         markup.add(KeyboardButton(rep_type))
     return markup
 
-# Function to create faculty role buttons with emojis
+
 def create_faculty_role_buttons():
     markup = ReplyKeyboardMarkup(row_width=2)
     roles = ["👔 Faculty In-charge", "👥 Faculty Representative"]
@@ -37,7 +37,7 @@ def create_faculty_role_buttons():
         markup.add(KeyboardButton(role))
     return markup
 
-# Function to create student role buttons with emojis
+
 def create_student_role_buttons():
     markup = ReplyKeyboardMarkup(row_width=2)
     roles = ["💼 House BE Mentor", "🏅 House Captain", "🎖 House Vice-Captain"]
@@ -45,20 +45,20 @@ def create_student_role_buttons():
         markup.add(KeyboardButton(role))
     return markup
 
-# Function to create a restart button with emoji
+
 def create_restart_button():
     markup = ReplyKeyboardMarkup(row_width=1)
     markup.add(KeyboardButton("🔄 Restart"))
     return markup
 
-# Start command handler
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.reply_to(message, "𝐀𝐚 𝐆𝐚𝐲𝐚 𝐒𝐡𝐞𝐫,𝐍𝐚𝐚𝐦 𝐏𝐮𝐜𝐡𝐧𝐞😂", reply_markup=create_house_buttons())
-    # Initialize user data for this chat
+    
     user_data[message.chat.id] = {'step': 'house_selection'}
 
-# House selection handler
+
 @bot.message_handler(func=lambda message: user_data.get(message.chat.id, {}).get('step') == 'house_selection')
 def house_selection(message):
     houses = [
@@ -74,7 +74,7 @@ def house_selection(message):
     else:
         bot.reply_to(message, "𝐓𝐞𝐣 𝐍𝐚 𝐁𝐚𝐧𝐧𝐞")
 
-# Representative type selection handler
+
 @bot.message_handler(func=lambda message: user_data.get(message.chat.id, {}).get('step') == 'representative_type')
 def representative_type_selection(message):
     if message.text == "👨‍🏫 Faculties":
@@ -88,7 +88,7 @@ def representative_type_selection(message):
     else:
         bot.reply_to(message, "𝐓𝐞𝐣 𝐍𝐚 𝐁𝐚𝐧𝐧𝐞")
 
-# Function to retrieve contact information and associated photo
+
 def get_contact_details_and_photo(house, rep_type, role):
     contact_data = {
         "🔵 Samrat Ashoka": {
@@ -133,10 +133,10 @@ def representative_role_selection(message):
         user_data[message.chat.id]['role'] = message.text
         contact_info, photo_path = get_contact_details_and_photo(user_data[message.chat.id]['house'], user_data[message.chat.id]['rep_type'], user_data[message.chat.id]['role'])
 
-        # Send the contact info
+        
         bot.reply_to(message, contact_info)
 
-        # Send the photo if available
+        
         if photo_path:
             with open(photo_path, 'rb') as photo:
                 bot.send_photo(message.chat.id, photo)
@@ -146,7 +146,7 @@ def representative_role_selection(message):
     else:
         bot.reply_to(message, "𝐓𝐞𝐣 𝐍𝐚 𝐁𝐚𝐧𝐧𝐞")
 
-# Restart handler
+
 @bot.message_handler(func=lambda message: user_data.get(message.chat.id, {}).get('step') == 'restart')
 def restart(message):
     if message.text == "🔄 Restart":
